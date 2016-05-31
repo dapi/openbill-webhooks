@@ -31,7 +31,7 @@ Web-hooks server for openbill
 
 * is_success
 
-
+## Installation
 https://github.com/kerl/kerl
 `brew install erlang`
 
