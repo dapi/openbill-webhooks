@@ -30,3 +30,30 @@ Web-hooks server for openbill
 * finished_at
 
 * is_success
+
+
+https://github.com/kerl/kerl
+`brew install erlang`
+
+https://github.com/taylor/kiex
+`kiex install 1.2.5`
+
+## Deps
+```
+mix deps.get
+npm install
+```
+
+## Dev
+```
+cp config/dev_example.exs config/dev.exs
+iex -S mix
+node server.js
+psql> notify my_channel, 'payload';
+```
+
+## Release
+```
+cp config/dev_example.exs config/prod.exs
+MIX_ENV=prod mix release
+```

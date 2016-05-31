@@ -1,0 +1,29 @@
+{
+  "name": "openbill-webhooks",
+  "version": "1.0.0",
+  "description": "Web-hooks server for openbill",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "connect": "^3.4.1",
+    "serve-static": "^1.10.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dapi/openbill-webhooks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dapi/openbill-webhooks/issues"
+  },
+  "homepage": "https://github.com/dapi/openbill-webhooks#readme"
+}
