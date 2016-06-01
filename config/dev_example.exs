@@ -11,7 +11,7 @@ config :openbill_webhooks, OpenbillWebhooks.TransactionListener,
   username: "${PGUSER}",
   password: "${PGPASSWORD}",
   hostname: "${PGHOST}",
-  port: "${PGPORT}"
+  port: "${PGPORT}" || 5432
 
 # tell logger to load a LoggerFileBackend processes
 config :logger,
