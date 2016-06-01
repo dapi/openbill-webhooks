@@ -33,7 +33,8 @@ defmodule OpenbillWebhooks.Mixfile do
     [
       {:exrm, "~> 1.0"},
       {:boltun, git: "https://github.com/cultureamp/boltun"},
-      {:httpotion, "~> 2.2.0"}
+      {:httpotion, "~> 2.2.0"},
+      {:logger_file_backend, git: "https://github.com/onkel-dirtus/logger_file_backend"}
    ]
   end
 end

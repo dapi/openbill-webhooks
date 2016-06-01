@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 
 var app = connect();
 
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 // respond to all requests
 app.use(function(req, res){
