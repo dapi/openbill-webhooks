@@ -15,7 +15,7 @@ defmodule OpenbillWebhooks.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:httpotion, :boltun, :logger],
+      applications: [:httpotion, :boltun, :logger, :logger_file_backend],
       mod: {OpenbillWebhooks, []}
     ]
   end

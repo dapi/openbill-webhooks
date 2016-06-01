@@ -7,10 +7,11 @@ config :openbill_webhooks, success_http_status: 200
 config :openbill_webhooks, success_http_body: "success"
 config :openbill_webhooks, channel: "openbill_transactions"
 config :openbill_webhooks, OpenbillWebhooks.TransactionListener,
-  database: "bml_development",
-  username: "postgres",
-  password: "",
-  hostname: "localhost"
+  database: "${PGDATABASE}",
+  username: "${PGUSER}",
+  password: "${PGPASSWORD}",
+  hostname: "${PGHOST}",
+  port: "${PGPORT}"
 
 # tell logger to load a LoggerFileBackend processes
 config :logger,
