@@ -1,5 +1,5 @@
 %{"bbmustache": {:hex, :bbmustache, "1.0.4", "7ba94f971c5afd7b6617918a4bb74705e36cab36eb84b19b6a1b7ee06427aa38", [:rebar], []},
-  "boltun": {:git, "https://github.com/cultureamp/boltun", "1759399baa88742824ee1d52ce9b7c74db1b2f2a", []},
+  "boltun": {:hex, :boltun, "1.0.1", "b7a5ee8ff0ad94fc8fda7a974901582a1fd104f66db56eef406c5153cedec2aa", [:mix], [{:postgrex, ">= 0.11.0", [hex: :postgrex, optional: false]}]},
   "cf": {:hex, :cf, "0.2.1", "69d0b1349fd4d7d4dc55b7f407d29d7a840bf9a1ef5af529f1ebe0ce153fc2ab", [:rebar3], []},
   "conform": {:hex, :conform, "0.16.0", "f6d6b207c693f2f939af8edeab7c735c4fd48552c63c0a019a52b6d2d98a1ca4", [:mix], [{:neotoma, "~> 1.7.3", [hex: :neotoma, optional: false]}]},
   "connection": {:hex, :connection, "1.0.2", "f4a06dd3ecae4141aa66f94ce92ea4c4b8753069472814932f1cadbc3078ab80", [:mix], []},

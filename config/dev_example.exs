@@ -11,8 +11,10 @@ config :openbill_webhooks, OpenbillWebhooks.TransactionListener,
   username: "${PGUSER}",
   password: "${PGPASSWORD}",
   hostname: "${PGHOST}",
-  port: "${PGPORT}" || 5432,
-  ssl: if (String.to_atom("${PGREQUIRESSL}")), do: true, else: false
+  port: 5432
+  # TODO: как-то привести типы
+  # port: "${PGPORT}" || 5432,
+  # ssl: "${PGREQUIRESSL}"
 
 # tell logger to load a LoggerFileBackend processes
 config :logger,
