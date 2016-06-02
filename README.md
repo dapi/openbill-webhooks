@@ -57,5 +57,5 @@ psql> notify my_channel, 'payload';
 cp config/dev_example.exs config/prod.exs
 MIX_ENV=prod mix compile
 MIX_ENV=prod mix release
-RELX_REPLACE_OS_VARS=true PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=password PGDATABASE=dbname rel/openbill_webhooks/bin/openbill_webhooks foreground
+RELX_REPLACE_OS_VARS=true PGREQUIRESSL=true PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=password PGDATABASE=dbname rel/openbill_webhooks/bin/openbill_webhooks foreground
 ```
