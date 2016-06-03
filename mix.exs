@@ -15,7 +15,7 @@ defmodule OpenbillWebhooks.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:httpotion, :boltun, :logger, :logger_file_backend],
+      applications: [:httpotion, :poolboy, :boltun, :logger, :logger_file_backend],
       mod: {OpenbillWebhooks, []}
     ]
   end
@@ -34,6 +34,7 @@ defmodule OpenbillWebhooks.Mixfile do
       {:exrm, "~> 1.0"},
       {:boltun, "~> 1.0.1"},
       {:httpotion, "~> 2.2.0"},
+      {:poolboy, "~> 1.5"},
       {:logger_file_backend, git: "https://github.com/onkel-dirtus/logger_file_backend"}
    ]
   end

@@ -6,6 +6,9 @@ config :openbill_webhooks, url: "http://api.kiiiosk.ru/v1/callbacks/openbill" # 
 config :openbill_webhooks, success_http_status: 200
 config :openbill_webhooks, success_http_body: "success"
 config :openbill_webhooks, channel: "openbill_transactions"
+config :openbill_webhooks, pool_name: :pg_notification_workers_pool
+config :openbill_webhooks, pool_size: 10
+config :openbill_webhooks, pool_max_overflow: 1
 config :openbill_webhooks, OpenbillWebhooks.TransactionListener,
   database: "${PGDATABASE}",
   username: "${PGUSER}",
