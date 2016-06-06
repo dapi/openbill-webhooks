@@ -40,16 +40,18 @@ npm install
 
 ## Dev
 ```
-cp config/dev_example.exs config/dev.exs
-mix deps.get
-iex -S mix
-node test_hook_server.js
-psql> notify openbill_transaction, '123';
-```
+> cp config/dev_example.exs config/dev.exs
+#  В config/dev.exs устанавливаем путь для POST-запроса config :openbill_webhooks, url: "http://localhost:3000"
 
-text_hook_server.js - веб сервер на 3000-м порту, который принимает хуки (для
-тестирования)
-123 - is transaction ID;
+> mix deps.get # Установка зависимостей
+> iex -S mix # Собственно запускаем сервис
+
+# Запускаем тестовый веб-сервер, который будет принимать запросы (http://localhost:3000)
+> node test_hook_server.js
+
+# Отправляем тестовое уведомление, где 123 - ID транзакции
+> psql> notify openbill_transaction, '123';
+```
 
 ## Release
 ```
