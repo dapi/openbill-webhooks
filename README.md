@@ -16,15 +16,19 @@ Docker - https://github.com/BrandyMint/docker-openbill-webhooks
 
 ## iOS
 
-> `brew install erlang`
+```shell
+> brew install erlang
+```
 
 
 ## Linux
 
 * https://github.com/kerl/kerl (Erlang Version Manager)
+```shell
 > kerl build 18.3 r18p3
 > kerl install r18p3 ~/erlang
 > ~/erlang/activate
+```
 
 ## All
 
@@ -32,18 +36,21 @@ https://github.com/taylor/kiex (Elixir Version Manager)
 
 Add ~/.kiex/bin to PATH
 
+```shell
 > kiex install 1.2.5
 > kiex default 1.2.5
+```
 
 ## Deps
-```
+```shell
 npm install
 ```
 
 ## Dev
-```
+```shell
 > cp config/dev_example.exs config/dev.exs
-#  В config/dev.exs устанавливаем путь для POST-запроса config :openbill_webhooks, url: "http://localhost:3000"
+# В config/dev.exs устанавливаем путь для POST-запроса config :openbill_webhooks, url: "http://localhost:3000"
+# и подключение к БД
 
 > mix deps.get # Установка зависимостей
 > iex -S mix # Собственно запускаем сервис
@@ -52,14 +59,13 @@ npm install
 > node test_hook_server.js
 
 # Отправляем тестовое уведомление, где 123 - ID транзакции
-> psql> notify openbill_transaction, '123';
+> psql> notify openbill_transactions, '123';
 ```
 
 ## Release
-```
-cp config/dev_example.exs config/prod.exs
-mix deps.get
+```shell
+cp config/prod_example.exs config/prod.exs
+MIX_ENV=prod mix deps.get
 MIX_ENV=prod mix compile
-MIX_ENV=prod mix release
-RELX_REPLACE_OS_VARS=true PGREQUIRESSL=true PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=password PGDATABASE=dbname rel/openbill_webhooks/bin/openbill_webhooks foreground
+MIX_ENV=prod PGREQUIRESSL=true PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=password PGDATABASE=dbname iex -S mix
 ```
