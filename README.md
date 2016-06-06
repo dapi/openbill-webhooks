@@ -21,6 +21,8 @@ Web-hooks server for openbill
 
 * https://github.com/kerl/kerl (Erlang Version Manager)
 > kerl build 18.3 r18p3
+> kerl install r18p3 ~/erlang
+> ~/erlang/activate
 
 ## All
 
