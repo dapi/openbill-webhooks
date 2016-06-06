@@ -35,21 +35,26 @@ Add ~/.kiex/bin to PATH
 
 ## Deps
 ```
-mix deps.get
 npm install
 ```
 
 ## Dev
 ```
 cp config/dev_example.exs config/dev.exs
+mix deps.get
 iex -S mix
-node server.js
-psql> notify my_channel, 'payload';
+node test_hook_server.js
+psql> notify openbill_transaction, '123';
 ```
+
+text_hook_server.js - веб сервер на 3000-м порту, который принимает хуки (для
+тестирования)
+123 - is transaction ID;
 
 ## Release
 ```
 cp config/dev_example.exs config/prod.exs
+mix deps.get
 MIX_ENV=prod mix compile
 MIX_ENV=prod mix release
 RELX_REPLACE_OS_VARS=true PGREQUIRESSL=true PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=password PGDATABASE=dbname rel/openbill_webhooks/bin/openbill_webhooks foreground
