@@ -15,19 +15,38 @@ defmodule OpenbillWebhooks.NotificationWorker do
     timeout = Application.get_env(:openbill_webhooks, :http_response_timeout_ms)
     body = "transaction_id=#{transaction_id}"
 
-    try do
-      response = HTTPotion.post(url, [body: body,
-                                      headers: ["Content-Type": "application/x-www-form-urlencoded"],
-                                      timeout: timeout])
+    run = fn(attempt, self) ->
+      sleep = :erlang.round((1 + :random.uniform) * 10 * :math.pow(2, attempt))
 
-      handle_response response, url, transaction_id
-    rescue
-      err ->
-        # TODO: retry
-        Logger.error(err.message, url: url, transaction_id: transaction_id)
+      if retries_exceeded?(attempt, url, transaction_id) do
+        {:reply, "retries exceeded", state}
+      else
+        try do
+          response = HTTPotion.post(url, [body: body,
+                                          headers: ["Content-Type": "application/x-www-form-urlencoded"],
+                                          timeout: timeout])
+
+          handle_response response, url, transaction_id
+          {:reply, "success", state}
+        rescue
+          err ->
+            Logger.error("#{err.message} Retry attempt: ##{attempt} in #{sleep} ms", pid: Kernel.self(), url: url, transaction_id: transaction_id)
+            :timer.sleep(sleep)
+            self.(attempt + 1, self)
+        end
+      end
     end
 
-    {:reply, "whatever", state}
+    run.(1, run)
+  end
+
+  defp retries_exceeded?(attempt, url, transaction_id) do
+    if attempt >= Application.get_env(:openbill_webhooks, :max_retries) do
+      Logger.error("Retries exceeded", pid: Kernel.self(), url: url, transaction_id: transaction_id)
+      true
+    else
+      false
+    end
   end
 
   defp handle_response(response, url, transaction_id) do
@@ -36,10 +55,10 @@ defmodule OpenbillWebhooks.NotificationWorker do
 
     if response.status_code == success_http_status do
       # if response.body == success_http_body do
-      Logger.info("Notified", url: url, transaction_id: transaction_id)
+      Logger.info("Notified", pid: Kernel.self(), url: url, transaction_id: transaction_id)
     else
       # TODO: maybe retry
-      Logger.error("Invalid status", url: url, transaction_id: transaction_id, status: response.status_code)
+      Logger.error("Invalid status", pid: Kernel.self(), url: url, transaction_id: transaction_id, status: response.status_code)
     end
   end
 end
