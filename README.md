@@ -11,11 +11,25 @@ Web-hooks server for openbill
 * database
 
 ## Installation
-https://github.com/kerl/kerl
-`brew install erlang`
 
-https://github.com/taylor/kiex
-`kiex install 1.2.5`
+## iOS
+
+> `brew install erlang`
+
+
+## Linux
+
+* https://github.com/kerl/kerl (Erlang Version Manager)
+> kerl build 18.3 r18p3
+
+## All
+
+https://github.com/taylor/kiex (Elixir Version Manager)
+
+Add ~/.kiex/bin to PATH
+
+> kiex install 1.2.5
+> kiex default 1.2.5
 
 ## Deps
 ```
