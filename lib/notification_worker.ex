@@ -16,7 +16,7 @@ defmodule OpenbillWebhooks.NotificationWorker do
     body = "transaction_id=#{transaction_id}"
 
     run = fn(attempt, self) ->
-      sleep = :erlang.round((1 + :random.uniform) * 10 * :math.pow(2, attempt))
+      sleep = :erlang.round((1 + :random.uniform) * 10 * :math.pow(2, attempt)) * 1000
 
       if retries_exceeded?(attempt, url, transaction_id) do
         {:reply, "retries exceeded", state}
