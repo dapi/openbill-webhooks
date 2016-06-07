@@ -17,37 +17,37 @@ defmodule OpenbillWebhooks.NotificationWorker do
     body = "transaction_id=#{transaction_id}"
 
     run = fn(attempt, self) ->
-      sleep = :erlang.round((1 + :random.uniform) * 10 * :math.pow(2, attempt)) * 1000
+      sleep = sleep_time attempt
 
-      if retries_exceeded?(attempt, transaction_id) do
-        {:reply, "retries exceeded", state}
-      else
-        try do
-          response = HTTPotion.post(@url, [body: body,
-                                          headers: ["Content-Type": "application/x-www-form-urlencoded"],
-                                          timeout: @timeout])
+      try do
+        response = HTTPotion.post(@url, [body: body,
+                                        headers: ["Content-Type": "application/x-www-form-urlencoded"],
+                                        timeout: @timeout])
 
-          handle_response response.status_code, response.body, transaction_id
-          {:reply, "success", state}
-        rescue
-          err ->
-            Logger.error("#{err.message} Retry attempt: ##{attempt} in #{sleep} ms", pid: Kernel.self(), url: @url, transaction_id: transaction_id)
-            :timer.sleep(sleep)
-            self.(attempt + 1, self)
-        end
+        handle_response response.status_code, response.body, transaction_id
+        {:reply, "success", state}
+      rescue
+        err ->
+          Logger.error("#{err.message} Retry attempt: ##{attempt} in #{sleep} ms", pid: Kernel.self(), url: @url, transaction_id: transaction_id)
+          :timer.sleep(sleep)
+          self.(attempt + 1, self)
       end
     end
 
     run.(1, run)
   end
 
-  @max_retries Application.get_env(:openbill_webhooks, :max_retries)
+  @minimal_try_timeout Application.get_env(:openbill_webhooks, :minimal_try_timeout_min) * 60000
+  @maximal_try_timeout Application.get_env(:openbill_webhooks, :maximal_try_timeout_min) * 60000
 
-  defp retries_exceeded?(@max_retries, transaction_id) do
-    Logger.error("Retries exceeded", pid: Kernel.self(), url: @url, transaction_id: transaction_id)
-    true
+  defp sleep_time(attempt) do
+    time = :erlang.round((1 + :random.uniform) * 10 * :math.pow(2, attempt)) * 1000
+    cond do
+      time < @minimal_try_timeout -> @minimal_try_timeout
+      time > @maximal_try_timeout -> @maximal_try_timeout
+      time -> time
+    end
   end
-  defp retries_exceeded?(_, _), do: false
 
   @success_http_status Application.get_env(:openbill_webhooks, :success_http_status)
   @success_http_body Application.get_env(:openbill_webhooks, :success_http_body)

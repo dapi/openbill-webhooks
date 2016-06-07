@@ -1,8 +1,7 @@
 use Mix.Config
 config :openbill_webhooks, http_response_timeout_ms: 3000
-config :openbill_webhooks, max_retries: 10
 config :openbill_webhooks, minimal_try_timeout_min: 1
-config :openbill_webhooks, maximal_try_timeout_min: 3600
+config :openbill_webhooks, maximal_try_timeout_min: 1440
 config :openbill_webhooks, url: "http://api.kiiiosk.ru/v1/callbacks/openbill"
 config :openbill_webhooks, success_http_status: 200
 config :openbill_webhooks, success_http_body: "success"
