@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // respond to all requests
 app.use(function(req, res){
   console.log(req.body);
-  res.end('password');
+  res.end('success');
 });
 
 //create node.js http server and listen on port
