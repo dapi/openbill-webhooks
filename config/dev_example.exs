@@ -6,28 +6,12 @@ config :openbill_webhooks, url: "http://localhost:3000/"
 config :openbill_webhooks, success_http_status: 200
 config :openbill_webhooks, success_http_body: "success"
 config :openbill_webhooks, channel: "openbill_transactions"
+config :openbill_webhooks, logs_table: "openbill_webhook_logs"
 config :openbill_webhooks, pool_name: :pg_notification_workers_pool
 config :openbill_webhooks, pool_size: 3
 config :openbill_webhooks, pool_max_overflow: 3
 config :openbill_webhooks, OpenbillWebhooks.TransactionListener,
-  database: "kiiiosk_development",
+  database: "kiiiosk_test",
   username: "postgres",
   password: "",
   hostname: "localhost"
-
-# tell logger to load a LoggerFileBackend processes
-config :logger,
-  backends: [{LoggerFileBackend, :error_file_logger},
-             {LoggerFileBackend, :info_file_logger}]
-
-config :logger, :error_file_logger,
-  format: "$date $time $metadata[$level] $message\n",
-  metadata: [:pid, :url, :transaction_id, :status],
-  path: "./error.log",
-  level: :error
-
-config :logger, :info_file_logger,
-  format: "$date $time $metadata[$level] $message\n",
-  metadata: [:pid, :url, :transaction_id],
-  path: "./info.log",
-  level: :info

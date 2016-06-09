@@ -1,6 +1,6 @@
 defmodule OpenbillWebhooks.NotificationWorker do
   use GenServer
-  require Logger
+  alias OpenbillWebhooks.Logger
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, nil, [])
@@ -14,21 +14,26 @@ defmodule OpenbillWebhooks.NotificationWorker do
   @timeout Application.get_env(:openbill_webhooks, :http_response_timeout_ms)
 
   def handle_call({:fetch, transaction_id}, _from, state) do
-    body = "transaction_id=#{transaction_id}"
+    {:ok, conn} = OpenbillWebhooks.db_connect
 
     run = fn(attempt, self) ->
       sleep = sleep_time attempt
 
       try do
-        response = HTTPotion.post(@url, [body: body,
+        response = HTTPotion.post(@url, [body: "transaction_id=#{transaction_id}",
                                         headers: ["Content-Type": "application/x-www-form-urlencoded"],
                                         timeout: @timeout])
 
-        handle_response response.status_code, response.body, transaction_id
+        handle_response conn, response.status_code, response.body, transaction_id
         {:reply, "success", state}
       rescue
         err ->
-          Logger.error("#{err.message} Retry attempt: ##{attempt} in #{sleep} ms", pid: Kernel.self(), url: @url, transaction_id: transaction_id)
+          Logger.error(conn, "#{err.message} Retry attempt: ##{attempt} in #{sleep / 1000} s",
+            %{pid: Kernel.self(),
+              url: @url,
+              transaction_id: transaction_id,
+              status: ''}
+          )
           :timer.sleep(sleep)
           self.(attempt + 1, self)
       end
@@ -52,15 +57,20 @@ defmodule OpenbillWebhooks.NotificationWorker do
   @success_http_status Application.get_env(:openbill_webhooks, :success_http_status)
   @success_http_body Application.get_env(:openbill_webhooks, :success_http_body)
 
-  defp handle_response(@success_http_status, @success_http_body, transaction_id) do
-    Logger.info("Notified", pid: Kernel.self(), url: @url, transaction_id: transaction_id)
+  defp handle_response(conn, @success_http_status, @success_http_body, transaction_id) do
+    Logger.info(conn, "Notified",
+      %{pid: Kernel.self(),
+        url: @url,
+        transaction_id: transaction_id,
+        status: @success_http_status}
+    )
   end
-  defp handle_response(status, _, transaction_id) do
-    Logger.error("Invalid status or body",
-      pid: Kernel.self(),
-      url: @url,
-      transaction_id: transaction_id,
-      status: status
+  defp handle_response(conn, status, _, transaction_id) do
+    Logger.error(conn, "Invalid status or body",
+      %{pid: Kernel.self(),
+        url: @url,
+        transaction_id: transaction_id,
+        status: status}
     )
     raise InvalidStatusError
   end
