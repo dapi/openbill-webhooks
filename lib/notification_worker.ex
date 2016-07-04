@@ -40,6 +40,8 @@ defmodule OpenbillWebhooks.NotificationWorker do
     end
 
     run.(1, run)
+    # TODO: terminate callback
+    OpenbillWebhooks.db_disconnect conn
   end
 
   @minimal_try_timeout Application.get_env(:openbill_webhooks, :minimal_try_timeout_min) * 60000

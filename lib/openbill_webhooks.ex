@@ -32,8 +32,13 @@ defmodule OpenbillWebhooks do
     Postgrex.start_link settings
   end
 
+  def db_disconnect(conn) do
+    GenServer.stop(conn, :shutdown)
+  end
+
   defp create_logs_table do
-    {:ok, pid} = OpenbillWebhooks.db_connect
-    Logger.create_table pid
+    {:ok, conn} = OpenbillWebhooks.db_connect
+    Logger.create_table conn
+    OpenbillWebhooks.db_disconnect conn
   end
 end
