@@ -12,7 +12,7 @@ defmodule OpenbillWebhooks.Logger do
       transaction_id      uuid not null,
       status              character varying(256),
       created_at          timestamp without time zone default current_timestamp,
-      foreign key (transaction_id) REFERENCES OPENBILL_TRANSACTIONS (id) ON DELETE RESTRICT
+      foreign key (transaction_id) REFERENCES OPENBILL_TRANSACTIONS (id) ON DELETE CASCADE
     );
     """
     level_index = "CREATE INDEX IF NOT EXISTS #{@table_name}_on_level ON #{@table_name} USING btree (level);"
