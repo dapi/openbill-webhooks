@@ -11,6 +11,7 @@ defmodule OpenbillWebhooks.Logger do
       url                 character varying(256) not null,
       transaction_id      uuid not null,
       status              character varying(256),
+      body                character varying(200),
       created_at          timestamp without time zone default current_timestamp,
       foreign key (transaction_id) REFERENCES OPENBILL_TRANSACTIONS (id) ON DELETE CASCADE
     );
@@ -32,8 +33,8 @@ defmodule OpenbillWebhooks.Logger do
 
   defp write_log(level, pid, message, payload) do
     sql = """
-    INSERT INTO #{@table_name} (level, message, pid, url, transaction_id, status)
-    VALUES ('#{level}', '#{message}', '#{inspect payload.pid}', '#{payload.url}', '#{payload.transaction_id}', '#{payload.status}')
+    INSERT INTO #{@table_name} (level, message, pid, url, transaction_id, status, body)
+    VALUES ('#{level}', '#{message}', '#{inspect payload.pid}', '#{payload.url}', '#{payload.transaction_id}', '#{payload.status}', '#{payload.body}')
     """
     Postgrex.query!(pid, sql, [])
   end

@@ -32,7 +32,8 @@ defmodule OpenbillWebhooks.NotificationWorker do
             %{pid: Kernel.self(),
               url: @url,
               transaction_id: transaction_id,
-              status: ''}
+              status: '',
+              body: ''}
           )
           :timer.sleep(sleep)
           self.(attempt + 1, self)
@@ -64,15 +65,17 @@ defmodule OpenbillWebhooks.NotificationWorker do
       %{pid: Kernel.self(),
         url: @url,
         transaction_id: transaction_id,
-        status: @success_http_status}
+        status: @success_http_status,
+        body: @success_http_body}
     )
   end
-  defp handle_response(conn, status, _, transaction_id) do
+  defp handle_response(conn, status, body, transaction_id) do
     Logger.error(conn, "Invalid status or body",
       %{pid: Kernel.self(),
         url: @url,
         transaction_id: transaction_id,
-        status: status}
+        status: status,
+        body: String.slice(body, 0..199)}
     )
     raise InvalidStatusError
   end
