@@ -6,14 +6,18 @@ defmodule OpenbillWebhooks.TransactionListener do
     channel Application.get_env(:openbill_webhooks, :channel), :handle_pg_notification
   end
 
+  @urls Application.get_env(:openbill_webhooks, :urls)
+  @pool_name Application.get_env(:openbill_webhooks, :pool_name)
+
   def handle_pg_notification(_channel, transaction_id) do
-    spawn( fn() -> process(transaction_id) end )
+    Enum.each @urls, fn(url) ->
+      spawn( fn() -> process(transaction_id, url) end )
+    end
   end
 
-  def process(transaction_id) do
-    pool_name = Application.get_env(:openbill_webhooks, :pool_name)
-    :poolboy.transaction pool_name, fn(http_requester_pid) ->
-      NotificationWorker.fetch(http_requester_pid, transaction_id)
+  def process(transaction_id, url) do
+    :poolboy.transaction @pool_name, fn(http_requester_pid) ->
+      NotificationWorker.fetch(http_requester_pid, transaction_id, url)
     end
   end
 end
